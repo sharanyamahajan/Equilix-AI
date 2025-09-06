@@ -1,0 +1,34 @@
+<!-- static/demo.html -->
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Equilix PoC Demo</title>
+  <style>body{font-family:Inter,Arial;padding:20px;max-width:900px;margin:auto}</style>
+</head>
+<body>
+  <h1>Equilix PoC Demo</h1>
+  <p>Create project, ingest requirement, generate tests.</p>
+
+  <h3>Create Project</h3>
+  <textarea id="projName" placeholder="Project name" rows="1" style="width:100%">Demo Project</textarea><br>
+  <input id="region" value="US" />
+  <button onclick="createProject()">Create</button>
+  <pre id="out"></pre>
+
+<script>
+async function createProject(){
+  const name = document.getElementById("projName").value;
+  const region = document.getElementById("region").value;
+  const res = await fetch('/api/v1/projects', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({name, region, regulations:['HIPAA','21CFR']})
+  });
+  const d = await res.json();
+  document.getElementById("out").innerText = JSON.stringify(d, null, 2);
+  window._project = d.project_id;
+}
+
+</script>
+</body>
+</html>
